@@ -1,0 +1,107 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<math.h>
+struct node
+{
+ int coef;
+ int exp;
+ struct node* next;
+};
+  typedef struct node node;
+ void insert(node** poly,int coef,int exp)
+ { node* current=*poly;
+   node* temp=(node*) malloc(sizeof(node));
+   temp->coef=coef;
+   temp->exp=exp;
+   temp->next=NULL;
+   if(*poly==NULL)
+    {
+     *poly=temp;
+      return;
+    }
+
+  while(current->next!=NULL)
+  {
+   current=current->next;
+  }
+   current->next=temp;
+  }
+ void print(node* poly)
+ {
+  node* current;
+   if(poly==NULL)
+  {
+    printf("0\n");
+    return;
+  }    current=poly;
+
+ while(current!=NULL)
+ {
+   printf("%dx^%d",current->coef,current->exp);
+   if(current->next != NULL)
+     {
+      printf("+");
+     }
+   current=current->next;
+ }
+  printf("\n");
+ }
+ node* add(node *poly1,node *poly2)
+ {
+   node* result=NULL;
+   while(poly1!=NULL&&poly2!=NULL)
+ {
+   if(poly1->exp==poly2->exp)
+ {
+   insert(&result,poly1->coef+poly2->coef,poly1->exp);
+   poly1=poly1->next;
+   poly2=poly2->next;}
+ else if(poly1->exp > poly2->exp)
+ {
+   insert(&result,poly1->coef,poly1->exp);
+   poly1=poly1->next;
+ }
+ else
+ {
+   insert(&result,poly2->coef,poly2->exp);
+   poly2=poly2->next;
+ }
+  }
+ while(poly1!=NULL)
+ {
+   insert(&result,poly1->coef,poly1->exp);
+   poly1=poly1->next;
+ }
+ while(poly2!=NULL)
+ {
+  insert(&result,poly2->coef,poly2->exp);
+  poly2=poly2->next;
+ }
+  return (result);
+} long eval(struct node *p,int x)
+ {
+ long val=0;
+ while(p)
+ {
+ val+=p->coef*pow(x,p->exp);
+ p=p->next;
+ }
+ return(val);
+ }
+void main()
+{
+ int x;
+  node* result;
+  node* poly1=NULL;
+  clrscr();
+  insert(&poly1,5,4);
+  insert(&poly1,3,2);
+  insert(&poly1,1,0);
+  printf(" polynomial:  ");
+  print(poly1);
+  printf("enter value of x: ");
+  scanf("%d",&x);
+  printf(" final result : %ld\n",eval(poly1,x))          ;
+   getch();
+}
